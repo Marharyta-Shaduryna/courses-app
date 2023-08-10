@@ -1,0 +1,20 @@
+@import '../../assets/styles/font.scss';
+@import '../../assets/styles/colors.scss';
+
+.button {
+    padding: 13px 36px;
+    gap: 10px;
+    flex-shrink: 0;
+    background-color: $primary_blue;
+    color: $white;
+    border-radius: 4px;
+    border-color: $primary_blue;
+    border-style: none;
+    text-align: center;
+    font-family: $font-family;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+    text-transform: uppercase;
+}
