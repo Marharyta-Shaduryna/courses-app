@@ -1,18 +1,22 @@
 import React from 'react';
 
-import { mockedCoursesList } from '../../assets/mock/mockCourseData';
 import { CourseCard } from './CourseCard/CourseCard';
+import styles from './Courses.module.scss';
+import { Course } from '../../interfaces/courseInterface';
+interface CoursesProps {
+    courses: Course[];
+}
 
-export const Courses = () => {
-	return (
-		<div className='container'>
-			{mockedCoursesList.map((course, index) => {
-				return (
-					<React.Fragment key={`card-${index}`}>
-						<CourseCard {...course} />
-					</React.Fragment>
-				);
-			})}
-		</div>
-	);
+export const Courses: React.FC<CoursesProps> = ({ courses }) => {
+    return (
+        <div className='container'>
+            {courses.map((course, index) => {
+                return (
+                    <div className={styles.card} key={`card-${index}`}>
+                        <CourseCard {...course} />
+                    </div>
+                );
+            })}
+        </div>
+    );
 };
