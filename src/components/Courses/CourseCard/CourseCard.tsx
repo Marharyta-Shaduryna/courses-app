@@ -3,24 +3,30 @@ import React, { useCallback } from 'react';
 import styles from './CourseCard.module.scss';
 import Button from '../../../common/Button/Button';
 import { ButtonsName } from '../../../assets/text/buttonsName';
-import { mockedAuthorsList } from '../../../assets/mock/mockCourseData';
 import { getCourseDuration } from '../../../helpers.ts/getCourseDuration';
 import { Course } from '../../../interfaces/courseInterface';
+import { TEXT_BUNDLE } from '../../../assets/text/textbundle';
+import { getAuthorsName } from '../../../helpers.ts/getAuthorsName';
 
-export const CourseCard: React.FC<Course> = (props) => {
+interface CourseCardProps {
+	props: Course;
+	showCurrentCourse: (props: Course) => void;
+}
+
+export const CourseCard: React.FC<CourseCardProps> = ({
+	props,
+	showCurrentCourse,
+}) => {
 	const getAuthors = useCallback(
 		(authorsList: string[]) => {
-			const authors = authorsList
-				.map(
-					(authorId) =>
-						mockedAuthorsList?.find((i) => i.id === authorId)?.name || ''
-				)
-				.join(', ');
-
-			return authors.length > 40 ? authors.slice(0, 40) + '...' : authors;
+			return getAuthorsName(authorsList);
 		},
 		[props.authors]
 	);
+
+	const showCourse = useCallback(() => {
+		showCurrentCourse(props);
+	}, [props]);
 
 	return (
 		<div className={styles.container}>
@@ -30,17 +36,18 @@ export const CourseCard: React.FC<Course> = (props) => {
 				<div className={styles.content__courseInfo}>
 					<div className={styles.content__courseOverview}>
 						<div>
-							<b>Authors:</b> {getAuthors(props.authors)}
+							<b>{TEXT_BUNDLE.authors}:</b> {getAuthors(props.authors)}
 						</div>
 						<div>
-							<b>Duration:</b> {getCourseDuration(props.duration)}
+							<b>{TEXT_BUNDLE.duration}:</b> {getCourseDuration(props.duration)}
 						</div>
 						<div>
-							<b>Created:</b> {props.creationDate.replaceAll('/', '.')}
+							<b>{TEXT_BUNDLE.created}:</b>{' '}
+							{props.creationDate.replaceAll('/', '.')}
 						</div>
 					</div>
 					<div className={styles.buttonsContainer}>
-						<Button buttonText={ButtonsName.ShowCourse} />
+						<Button buttonText={ButtonsName.ShowCourse} onClick={showCourse} />
 					</div>
 				</div>
 			</div>

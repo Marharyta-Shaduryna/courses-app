@@ -4,4 +4,5 @@ export enum ButtonsName {
 	AddNewCourse = 'Add new course',
 	Search = 'Search',
 	ShowCourse = 'Show course',
+	Back = 'Back',
 }

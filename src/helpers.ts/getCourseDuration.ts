@@ -1,4 +1,5 @@
-export function getCourseDuration(dur: number): string {
+export function getCourseDuration(dur: number | undefined): string {
+	if (!dur) return '0:00';
 	const hours = Math.floor(dur / 60);
 	const minutes = dur % 60;
 

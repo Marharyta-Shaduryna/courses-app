@@ -18,3 +18,9 @@
     line-height: 24px;
     text-transform: uppercase;
 }
+
+.button:focus,
+.button:hover {
+   background-color: $secondary_blue;
+   cursor: pointer;
+}
