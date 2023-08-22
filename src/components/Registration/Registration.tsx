@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './Registration.module.scss';
 import { TEXT_BUNDLE } from '../../assets/text/textbundle';
 import Input from '../../common/Input/Input';

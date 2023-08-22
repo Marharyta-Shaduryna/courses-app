@@ -6,12 +6,10 @@ interface ButtonProps {
 	onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-const Button: React.FC<ButtonProps> = (props) => {
-	return (
-		<button className={styles.button} onClick={props.onClick}>
-			{props.buttonText}
-		</button>
-	);
-};
+const Button: React.FC<ButtonProps> = (props) => (
+	<button className={styles.button} onClick={props.onClick}>
+		{props.buttonText}
+	</button>
+);
 
 export default Button;

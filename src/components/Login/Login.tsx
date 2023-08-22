@@ -46,7 +46,7 @@ export const Login = () => {
 						JSON.stringify(token)
 					);
 
-					localStorage.setItem('USER_NAME', response.data.user?.name);
+					localStorage.setItem('USER', JSON.stringify(response.data.user));
 					navigate('/courses', { replace: true });
 				}
 			})

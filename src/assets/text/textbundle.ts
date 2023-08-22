@@ -15,4 +15,5 @@ export enum TEXT_BUNDLE {
 	author = 'Author',
 	courseAuthors = 'Course Authors',
 	authorsList = 'Authors List',
+	noPermissionsMessage = `You don't have permissions to create a course. Please log in as ADMIN`,
 }

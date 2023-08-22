@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const Header = () => {
 	const [isLogin, setIsLogin] = useState(false);
-	const [userName, setUserName] = useState('');
+	const [name, setName] = useState('');
 	const navigate = useNavigate();
 
 	function logout() {
@@ -20,8 +20,9 @@ export const Header = () => {
 		if (localStorage.getItem('AUTH_TOKEN_REACT_COURSE')?.includes('Bearer')) {
 			setIsLogin(true);
 		}
-		const userName = localStorage.getItem('USER_NAME');
-		userName ? setUserName(userName) : setUserName('');
+		const user = localStorage.getItem('USER');
+		const { name, email } = JSON.parse(user || '{}');
+		name && !email.includes('admin') ? setName(name) : setName('');
 	}, [navigate]);
 
 	return (
@@ -29,7 +30,7 @@ export const Header = () => {
 			<Logo />
 			{isLogin && (
 				<div className={styles.loginContainer}>
-					<div> {userName}</div>
+					<div> {name}</div>
 					<div className={styles.buttonContainer}>
 						<Button buttonText={ButtonsName.Logout} onClick={logout} />
 					</div>

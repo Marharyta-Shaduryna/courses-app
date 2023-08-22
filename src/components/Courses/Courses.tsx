@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { CourseCard } from './CourseCard/CourseCard';
 import styles from './Courses.module.scss';
