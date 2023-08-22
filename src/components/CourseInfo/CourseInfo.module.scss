@@ -1,0 +1,75 @@
+@import '../../assets/styles/colors.scss';
+@import '../../assets/styles/font.scss';
+
+.description {
+    width: 50%;
+    color: $dark_gray;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.info {
+    width: 50%;
+    color: $dark_gray;
+    min-width: 400px;
+}
+
+.courseContainer {
+    border-radius: 4px;
+    border: 1px solid $light_gray;
+    background: $white;
+    padding: 30px;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    font-family: $font_family;
+}
+
+.courseInfo {
+    display: flex;
+    align-items: center;
+}
+
+.verticalLine {
+    width: 1px;
+    height: 150px;
+    margin: 10px 32px;
+    display: block;
+    background: $secondary_gray;
+}
+
+.title {
+    color: $dark_gray;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40px;
+    text-transform: capitalize;
+}
+
+.descriptionTitle {
+    color: $dark_gray;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+}
+
+.infoTitle {
+    color: $dark_gray;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
+    text-transform: capitalize;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 45px;
+}
