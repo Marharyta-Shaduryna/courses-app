@@ -5,4 +5,7 @@ export enum ButtonsName {
 	Search = 'Search',
 	ShowCourse = 'Show course',
 	Back = 'Back',
+	CreateAuthor = 'Create Author',
+	Cancel = 'Cancel',
+	CreateCourse = 'Create Course',
 }

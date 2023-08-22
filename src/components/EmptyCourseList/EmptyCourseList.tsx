@@ -9,7 +9,9 @@ export const EmptyCourseList = () => {
 		<div className={styles.container}>
 			<h3 className={styles.title}>{TEXT_BUNDLE.emptyListTitle}</h3>
 			<p className={styles.message}>{TEXT_BUNDLE.emptyCourseListMessage}</p>
-			<Button buttonText={ButtonsName.AddNewCourse} />
+			<div className={styles.buttonContainer}>
+				<Button buttonText={ButtonsName.AddNewCourse} />
+			</div>
 		</div>
 	);
 };

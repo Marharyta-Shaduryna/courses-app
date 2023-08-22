@@ -4,19 +4,18 @@ import styles from './CourseCard.module.scss';
 import Button from '../../../common/Button/Button';
 import { ButtonsName } from '../../../assets/text/buttonsName';
 import { getCourseDuration } from '../../../helpers.ts/getCourseDuration';
-import { Course } from '../../../interfaces/courseInterface';
+import { Course } from '../../../interfaces/course.interface';
 import { TEXT_BUNDLE } from '../../../assets/text/textbundle';
 import { getAuthorsName } from '../../../helpers.ts/getAuthorsName';
+import { useNavigate } from 'react-router-dom';
 
 interface CourseCardProps {
 	props: Course;
-	showCurrentCourse: (props: Course) => void;
 }
 
-export const CourseCard: React.FC<CourseCardProps> = ({
-	props,
-	showCurrentCourse,
-}) => {
+export const CourseCard: React.FC<CourseCardProps> = ({ props }) => {
+	const navigate = useNavigate();
+
 	const getAuthors = useCallback(
 		(authorsList: string[]) => {
 			return getAuthorsName(authorsList);
@@ -25,7 +24,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 	);
 
 	const showCourse = useCallback(() => {
-		showCurrentCourse(props);
+		navigate(`/courses/${props.id}`, { replace: true });
 	}, [props]);
 
 	return (

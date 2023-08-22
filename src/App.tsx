@@ -1,38 +1,35 @@
-import React, { useState } from 'react';
-import { Courses } from './components/Courses/Courses';
+import { useEffect, useState } from 'react';
 import { Header } from './components/Header/Header';
-import { mockedCoursesList } from './assets/mock/mockCourseData';
-import { EmptyCourseList } from './components/EmptyCourseList/EmptyCourseList';
 import styles from './App.module.scss';
-import { CourseInfo } from './components/CourseInfo/CourseInfo';
-import { Course } from './interfaces/courseInterface';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 const App = () => {
-	const [isCourses, setIsCourses] = useState(true);
-	const [currentCourse, setCurrentCourse] = useState<Course | null>(null);
+	const navigate = useNavigate();
+	const location = useLocation();
+	const [hasNavigated, setHasNavigated] = useState(false);
 
-	const showCurrentCourse = (payload: Course) => {
-		setIsCourses(false);
-		setCurrentCourse(payload);
-	};
-	const showAllCourses = () => setIsCourses(true);
+	useEffect(() => {
+		if (hasNavigated) return;
+
+		const isToken = localStorage.getItem('AUTH_TOKEN_REACT_COURSE');
+		const isAuthPages =
+			location.pathname === '/registration' || location.pathname === '/login';
+		if (isToken && isToken.includes('Bearer')) {
+			navigate('/courses', { replace: true });
+			setHasNavigated(true);
+		} else if (!isAuthPages) {
+			navigate('/login', { replace: true });
+			setHasNavigated(true);
+		}
+	}, [navigate, location, hasNavigated]);
 
 	return (
 		<div>
 			<Header />
 			<div className={styles.container}>
-				{mockedCoursesList && mockedCoursesList.length > 0 ? (
-					isCourses ? (
-						<Courses
-							courses={mockedCoursesList}
-							showCourse={showCurrentCourse}
-						/>
-					) : (
-						<CourseInfo course={currentCourse} showCourses={showAllCourses} />
-					)
-				) : (
-					<EmptyCourseList />
-				)}
+				<div>
+					<Outlet />
+				</div>
 			</div>
 		</div>
 	);
