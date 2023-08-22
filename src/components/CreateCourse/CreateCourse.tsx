@@ -5,7 +5,7 @@ import styles from './CreateCourse.module.scss';
 import { getCourseDuration } from '../../helpers.ts/getCourseDuration';
 import { ButtonsName } from '../../assets/text/buttonsName';
 import Button from '../../common/Button/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthorItem } from './components/AuthorItem/AuthorItem';
 import { v4 as uuidv4 } from 'uuid';
 import { Author } from '../../interfaces/author.interface';
@@ -38,6 +38,7 @@ export const CreateCourse = () => {
 	const watchedAuthorName = watch('AuthorName');
 	const [authors, setAuthors] = useState<Author[]>([]);
 	const [courseAuthors, setCourseAuthors] = useState<Author[]>([]);
+	const [authorsError, setAuthorsError] = useState('');
 
 	const onSubmit: SubmitHandler<CourseData> = (data) => {
 		const courseData = {
@@ -48,6 +49,11 @@ export const CreateCourse = () => {
 			duration: data.Duration,
 			authors: courseAuthors.map((author) => author.id),
 		};
+
+		if (courseData.authors.length === 0) {
+			setAuthorsError(TEXT_BUNDLE.noAuthorsError);
+			return;
+		}
 		mockedCoursesList.push(courseData);
 		mockedAuthorsList.push(...courseAuthors);
 		navigate('/courses', { replace: true });
@@ -82,6 +88,12 @@ export const CreateCourse = () => {
 	const handleCancel = () => {
 		navigate('/courses', { replace: true });
 	};
+
+	useEffect(() => {
+		if (courseAuthors.length) {
+			setAuthorsError('');
+		}
+	}, [courseAuthors]);
 
 	return (
 		<div className={styles.container}>
@@ -134,6 +146,7 @@ export const CreateCourse = () => {
 											minLength: 2,
 										})}
 										error={errors.AuthorName}
+										serverError={authorsError}
 									/>
 								</div>
 								<div className={styles.createAuthorButton}>
