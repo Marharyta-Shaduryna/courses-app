@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './Login.module.scss';
 import { TEXT_BUNDLE } from '../../assets/text/textbundle';
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import { ButtonsName } from '../../assets/text/buttonsName';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import axios from 'axios';
-import { API_CONSTANTS } from '../../helpers.ts/api-constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store';
+import { fetchUser } from '../../store/asyncActions';
+import { getErrors, getIsAuth } from '../../store/user/selectors';
+import { clearErrors } from '../../store/user/actions';
 
 type Inputs = {
 	Email: string;
@@ -19,12 +22,29 @@ export const Login = () => {
 	const [emailServerError, setEmailServerError] = useState('');
 	const [passwordServerError, setPasswordServerError] = useState('');
 	const navigate = useNavigate();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm<Inputs>();
+
+	const loginErrors = useSelector(getErrors);
+	const isAuth = useSelector(getIsAuth);
+
+	useEffect(() => {
+		if (isAuth) {
+			navigate('/courses', { replace: true });
+		}
+
+		if (!isAuth && loginErrors) {
+			loginErrors.forEach((err: string) => {
+				if (err.includes('email')) setEmailServerError(err);
+				if (err.includes('password')) setPasswordServerError(err);
+			});
+		}
+	}, [isAuth, loginErrors]);
 
 	const onSubmit: SubmitHandler<Inputs> = (data) => {
 		//email:admin@email.com
@@ -36,26 +56,12 @@ export const Login = () => {
 			password: data.Password,
 		};
 
-		axios
-			.post(API_CONSTANTS.login, body)
-			.then(function (response) {
-				if (response.data.successful) {
-					const token = response.data.result;
-					localStorage.setItem(
-						'AUTH_TOKEN_REACT_COURSE',
-						JSON.stringify(token)
-					);
+		dispatch(fetchUser(body));
+	};
 
-					localStorage.setItem('USER', JSON.stringify(response.data.user));
-					navigate('/courses', { replace: true });
-				}
-			})
-			.catch(function (error) {
-				error.response.data.errors.forEach((err: string) => {
-					if (err.includes('email')) setEmailServerError(err);
-					if (err.includes('password')) setPasswordServerError(err);
-				});
-			});
+	const handleRegistrationRedirect = () => {
+		dispatch(clearErrors());
+		navigate('/registration', { replace: true });
 	};
 
 	return (
@@ -84,10 +90,13 @@ export const Login = () => {
 						<Button buttonText={ButtonsName.Login} />
 					</div>
 					<p className={styles.loginLink}>
-						If you have an account you may{' '}
-						<Link to='/registration' className={styles.loginLink_bold}>
+						If you don't have an account you may{' '}
+						<span
+							onClick={handleRegistrationRedirect}
+							className={styles.loginLink_bold}
+						>
 							Registration
-						</Link>
+						</span>
 					</p>
 				</form>
 			</div>

@@ -1,27 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Header } from './components/Header/Header';
 import styles from './App.module.scss';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { fetchCourses } from './store/asyncActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from './store';
+import { getIsAuth } from './store/user/selectors';
 
 const App = () => {
 	const navigate = useNavigate();
-	const location = useLocation();
-	const [hasNavigated, setHasNavigated] = useState(false);
+
+	const dispatch = useDispatch<AppDispatch>();
+	const isAuth = useSelector(getIsAuth);
 
 	useEffect(() => {
-		if (hasNavigated) return;
+		dispatch(fetchCourses());
+	}, [dispatch]);
 
+	useEffect(() => {
 		const isToken = localStorage.getItem('AUTH_TOKEN_REACT_COURSE');
-		const isAuthPages =
-			location.pathname === '/registration' || location.pathname === '/login';
-		if (isToken && isToken.includes('Bearer')) {
+		if (isAuth && isToken && isToken.includes('Bearer')) {
 			navigate('/courses', { replace: true });
-			setHasNavigated(true);
-		} else if (!isAuthPages) {
-			navigate('/login', { replace: true });
-			setHasNavigated(true);
 		}
-	}, [navigate, location, hasNavigated]);
+		if (!isAuth) {
+			navigate('/login', { replace: true });
+		}
+	}, [isAuth]);
 
 	return (
 		<div>
