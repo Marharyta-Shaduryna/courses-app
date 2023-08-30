@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 import styles from './SearchBar.module.scss';
 import { ButtonsName } from '../../../assets/text/buttonsName';
@@ -10,9 +10,9 @@ export const SearchBar: React.FC<{
 }> = ({ onSearchCourse }) => {
 	const [inputValue, setInputValue] = useState<string>('');
 
-	const onChangeInput = (payload: string) => {
-		if (!payload) onSearchCourse(payload);
-		setInputValue(payload);
+	const onChangeInput = (payload: ChangeEvent<HTMLInputElement>) => {
+		if (payload.target.value === '') onSearchCourse('');
+		setInputValue(payload.target.value);
 	};
 
 	const onSearch = () => {
@@ -21,10 +21,12 @@ export const SearchBar: React.FC<{
 
 	return (
 		<div className={styles.container}>
-			<label className={styles.input}>
+			<div className={styles.input}>
 				<Input onChange={onChangeInput} />
-			</label>
-			<Button buttonText={ButtonsName.Search} onClick={onSearch} />
+			</div>
+			<div className={styles.buttonContainer}>
+				<Button buttonText={ButtonsName.Search} onClick={onSearch} />
+			</div>
 		</div>
 	);
 };

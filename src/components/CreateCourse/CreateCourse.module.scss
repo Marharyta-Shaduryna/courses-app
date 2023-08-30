@@ -1,0 +1,106 @@
+@import '../../assets/styles/colors.scss';
+@import '../../assets/styles/font.scss';
+
+.container {
+    width: 80%;
+    min-width: 900px;
+    margin: 0 auto;
+}
+
+.courseEditTitle {
+    color: $dark_gray;
+    font-family: $font-family;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40px;
+    text-transform: capitalize;
+}
+
+.secondaryTitle {
+    color: $dark_gray;
+    font-family: $font-family;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
+    text-transform: capitalize;
+}
+
+.courseContainer {
+    padding: 40px 80px 80px 80px;
+    border-radius: 4px;
+    border: 1px solid $light_gray;
+    background: $white;
+}
+
+label,
+textarea {
+    display: block;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    resize: none;
+}
+
+.textareaLabel {
+    margin: 50px 0;
+}
+
+.durationContainer,
+.authorsContent {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.authorsContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.createAuthorButton {
+    margin: 16px 0 0;
+}
+
+.durationInput,
+.addAuthorsInput {
+    width: 400px;
+    margin-right: 16px;
+}
+
+.duration {
+    margin-top: 20px;
+}
+
+.tertiaryTitle {
+    color: $dark_gray;
+    font-family: $font-family;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 20px;
+}
+
+.buttonsContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.error {
+    color: $error;
+    text-align: center;
+    font-family: $font-family;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.errorInput,
+.errorInput:focus {
+    border: 1px solid $error;
+}

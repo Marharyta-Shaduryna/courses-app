@@ -1,0 +1,50 @@
+@import '../../assets/styles/colors.scss';
+@import '../../assets/styles/font.scss';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: $light_gray;
+    height: 100vh;
+}
+
+.title {
+    color: $dark-gray;
+    font-family: $font-family;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40px;
+    text-transform: capitalize;
+    margin-bottom: 40px;
+}
+
+.content {
+    border-radius: 4px;
+    border: 1px solid $secondary_gray;
+    background: $white;
+    padding: 50px 50px 60px 50px;
+}
+
+.margin {
+    width:286px;
+    padding: 30px;
+}
+
+.loginLink {
+    color: $dark-gray;
+    text-align: center;
+    font-family: $font-family;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+
+    &_bold {
+        font-weight: 700;
+        text-decoration: none;
+        color: $dark-gray;
+    }
+}
