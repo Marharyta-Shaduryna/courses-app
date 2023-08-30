@@ -1,37 +1,35 @@
-import { useEffect, useState } from 'react';
-import { Header } from './components/Header/Header';
-import styles from './App.module.scss';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { fetchCourses } from './store/asyncActions';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from './store';
+import { Login } from './components/Login/Login';
+import { Courses } from './components/Courses/Courses';
+import { CreateCourse } from './components/CreateCourse/CreateCourse';
+import { CourseInfo } from './components/CourseInfo/CourseInfo';
+import { Registration } from './components/Registration/Registration';
+import Layout from './components/Layout/Layout';
 
 const App = () => {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const [hasNavigated, setHasNavigated] = useState(false);
+	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
-		if (hasNavigated) return;
-
-		const isToken = localStorage.getItem('AUTH_TOKEN_REACT_COURSE');
-		const isAuthPages =
-			location.pathname === '/registration' || location.pathname === '/login';
-		if (isToken && isToken.includes('Bearer')) {
-			navigate('/courses', { replace: true });
-			setHasNavigated(true);
-		} else if (!isAuthPages) {
-			navigate('/login', { replace: true });
-			setHasNavigated(true);
-		}
-	}, [navigate, location, hasNavigated]);
+		dispatch(fetchCourses());
+	}, [dispatch]);
 
 	return (
-		<div>
-			<Header />
-			<div className={styles.container}>
-				<div>
-					<Outlet />
-				</div>
-			</div>
-		</div>
+		<BrowserRouter>
+			<Layout>
+				<Routes>
+					<Route path='login' element={<Login />} />
+					<Route path='courses' element={<Courses />} />
+					<Route path='courses/add' element={<CreateCourse />} />
+					<Route path='courses/:courseId/edit' element={<CreateCourse />} />
+					<Route path='courses/:courseId' element={<CourseInfo />} />
+					<Route path='registration' element={<Registration />} />
+				</Routes>
+			</Layout>
+		</BrowserRouter>
 	);
 };
 

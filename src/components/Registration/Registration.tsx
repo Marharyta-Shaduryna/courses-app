@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Registration.module.scss';
 import { TEXT_BUNDLE } from '../../assets/text/textbundle';
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import { ButtonsName } from '../../assets/text/buttonsName';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import axios from 'axios';
-import { API_CONSTANTS } from '../../helpers.ts/api-constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { createUser } from '../../store/asyncActions';
+import { AppDispatch } from '../../store';
+import { getErrors, getIsAuth } from '../../store/user/selectors';
+import { clearErrors } from '../../store/user/actions';
 
 type Inputs = {
 	Name: string;
@@ -21,33 +24,42 @@ export const Registration = () => {
 	const [nameServerError, setNameServerError] = useState('');
 	const navigate = useNavigate();
 
+	const dispatch = useDispatch<AppDispatch>();
+	const registrationErrors = useSelector(getErrors);
+	const isAuth = useSelector(getIsAuth);
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm<Inputs>();
 
-	const onSubmit: SubmitHandler<Inputs> = (data) => {
+	const onSubmit: SubmitHandler<Inputs> = async (data) => {
 		const body = {
 			email: data.Email,
 			password: data.Password,
 			name: data.Name,
 		};
 
-		axios
-			.post(API_CONSTANTS.registration, body)
-			.then(function (response) {
-				if (response.data.successful) {
-					if (response.data.successful) navigate('/login', { replace: true });
-				}
-			})
-			.catch(function (error) {
-				error.response.data.errors.forEach((err: string) => {
-					if (err.includes('email')) setEmailServerError(err);
-					if (err.includes('password')) setPasswordServerError(err);
-					if (err.includes('name')) setNameServerError(err);
-				});
+		const isCreated = await dispatch(createUser(body));
+		if (!registrationErrors.length && isCreated) {
+			navigate('/login', { replace: true });
+		}
+	};
+
+	useEffect(() => {
+		if (!isAuth && registrationErrors.length) {
+			registrationErrors.forEach((err: string) => {
+				if (err.includes('email')) setEmailServerError(err);
+				if (err.includes('password')) setPasswordServerError(err);
+				if (err.includes('name')) setNameServerError(err);
 			});
+		}
+	}, [isAuth, registrationErrors]);
+
+	const handleLoginRedirect = () => {
+		dispatch(clearErrors());
+		navigate('/login', { replace: true });
 	};
 
 	return (
@@ -85,9 +97,12 @@ export const Registration = () => {
 					</div>
 					<p className={styles.loginLink}>
 						If you have an account you may{' '}
-						<Link to='/login' className={styles.loginLink_bold}>
+						<span
+							onClick={handleLoginRedirect}
+							className={styles.loginLink_bold}
+						>
 							Login
-						</Link>
+						</span>
 					</p>
 				</form>
 			</div>

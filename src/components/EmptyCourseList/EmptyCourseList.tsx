@@ -4,16 +4,20 @@ import { ButtonsName } from '../../assets/text/buttonsName';
 import styles from './EmptyCourseList.module.scss';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { getEmail, getIsAuth } from '../../store/user/selectors';
 
 export const EmptyCourseList = () => {
 	const [isAdmin, setIsAdmin] = useState<boolean>(false);
 	const navigate = useNavigate();
 
+	const email = useSelector(getEmail);
+	const isAuth = useSelector(getIsAuth);
+
 	useEffect(() => {
-		const user = localStorage.getItem('USER');
-		const { email } = JSON.parse(user || '{}');
+		if (!isAuth) return;
 		email.includes('admin') ? setIsAdmin(true) : setIsAdmin(false);
-	});
+	}, [isAuth, email]);
 
 	const addNewCourse = () => {
 		if (isAdmin) navigate('/courses/add', { replace: true });

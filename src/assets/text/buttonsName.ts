@@ -8,4 +8,5 @@ export enum ButtonsName {
 	CreateAuthor = 'Create Author',
 	Cancel = 'Cancel',
 	CreateCourse = 'Create Course',
+	UpdateCourse = 'Update Course',
 }

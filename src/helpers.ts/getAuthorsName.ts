@@ -1,12 +1,14 @@
-import { mockedAuthorsList } from '../assets/mock/mockCourseData';
+import { AuthorType } from '../store/authors/authors.type';
 
-export function getAuthorsName(authorsList: string[]): string {
-	const authors = authorsList
-		.map(
-			(authorId) =>
-				mockedAuthorsList?.find((i) => i.id === authorId)?.name || ''
-		)
+export function getAuthorsName(
+	authorsList: string[],
+	authors: AuthorType[]
+): string {
+	const authorsName = authorsList
+		.map((authorId) => authors?.find((i) => i.id === authorId)?.name || '')
 		.join(', ');
 
-	return authors.length > 40 ? authors.slice(0, 40) + '...' : authors;
+	return authorsName.length > 40
+		? authorsName.slice(0, 40) + '...'
+		: authorsName;
 }
