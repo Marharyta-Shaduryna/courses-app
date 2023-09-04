@@ -1,0 +1,5 @@
+export const enum AuthorsActionTypes {
+	FETCH_AUTHORS = 'FETCH_AUTHORS',
+	CREATE_NEW_AUTHOR = 'CREATE_NEW_AUTHOR',
+	DELETE_AUTHOR = 'DELETE_AUTHOR',
+}

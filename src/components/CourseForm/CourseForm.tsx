@@ -1,20 +1,28 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { TEXT_BUNDLE } from '../../assets/text/textbundle';
 import Input from '../../common/Input/Input';
-import styles from './CreateCourse.module.scss';
+import styles from './CourseForm.module.scss';
 import { getCourseDuration } from '../../helpers.ts/getCourseDuration';
 import { ButtonsName } from '../../assets/text/buttonsName';
 import Button from '../../common/Button/Button';
 import { useEffect, useState } from 'react';
 import { AuthorItem } from './components/AuthorItem/AuthorItem';
 import { v4 as uuidv4 } from 'uuid';
-import { Author } from '../../interfaces/author.interface';
-import { useNavigate } from 'react-router-dom';
-import {
-	mockedAuthorsList,
-	mockedCoursesList,
-} from '../../assets/mock/mockCourseData';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../../helpers.ts/formatDate';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../../store';
+import { CourseType } from '../../store/courses/courses.type';
+import { getCourses } from '../../store/courses/selectors';
+import { getAuthors } from '../../store/authors/selectors';
+import { AuthorType } from '../../store/authors/authors.type';
+import { deleteAuthorAction } from '../../store/authors/actions';
+import {
+	createNewCourse,
+	fetchCourses,
+	updateCourse,
+} from '../../store/courses/thunk';
+import { createAuthor } from '../../store/authors/thunk';
 
 type CourseData = {
 	Title: string;
@@ -23,7 +31,7 @@ type CourseData = {
 	AuthorName: string;
 };
 
-export const CreateCourse = () => {
+export const CourseForm = () => {
 	const {
 		register,
 		handleSubmit,
@@ -32,21 +40,52 @@ export const CreateCourse = () => {
 		formState: { errors },
 	} = useForm<CourseData>();
 
+	const dispatch = useDispatch<AppDispatch>();
+	const courses: CourseType[] = useSelector(getCourses);
+	const authorsList: AuthorType[] = useSelector(getAuthors);
+
 	const navigate = useNavigate();
+	const location = useLocation();
+	const { courseId } = useParams();
 
 	const watchedDuration = watch('Duration');
 	const watchedAuthorName = watch('AuthorName');
-	const [authors, setAuthors] = useState<Author[]>([]);
-	const [courseAuthors, setCourseAuthors] = useState<Author[]>([]);
+	const [authors, setAuthors] = useState<AuthorType[]>([]);
+	const [courseAuthors, setCourseAuthors] = useState<AuthorType[]>([]);
 	const [authorsError, setAuthorsError] = useState('');
+	const [editMode, setEditMode] = useState(false);
 
-	const onSubmit: SubmitHandler<CourseData> = (data) => {
+	useEffect(() => {
+		if (location.pathname.includes('/update')) {
+			setEditMode(true);
+		}
+	});
+
+	useEffect(() => {
+		if (editMode) {
+			const course: CourseType | undefined = courses?.find(
+				(course) => course.id === courseId
+			);
+
+			const authors = authorsList.filter(
+				(author) => course?.authors.includes(author.id)
+			);
+			if (course) {
+				setValue('Title', course.title);
+				setValue('Description', course.description);
+				setValue('Duration', course.duration);
+				setCourseAuthors(authors);
+			}
+		}
+	}, [editMode, location, setValue]);
+
+	const onSubmit: SubmitHandler<CourseData> = async (data) => {
 		const courseData = {
-			id: uuidv4(),
+			id: editMode && courseId ? courseId : uuidv4(),
 			title: data.Title,
 			description: data.Description,
 			creationDate: formatDate(new Date()),
-			duration: data.Duration,
+			duration: Number(data.Duration),
 			authors: courseAuthors.map((author) => author.id),
 		};
 
@@ -54,33 +93,41 @@ export const CreateCourse = () => {
 			setAuthorsError(TEXT_BUNDLE.noAuthorsError);
 			return;
 		}
-		mockedCoursesList.push(courseData);
-		mockedAuthorsList.push(...courseAuthors);
+
+		if (editMode && courseId) {
+			await dispatch(updateCourse(courseId, courseData));
+		} else {
+			await dispatch(createNewCourse(courseData));
+		}
+
+		dispatch(fetchCourses());
+
 		navigate('/courses', { replace: true });
 	};
 
-	const createAuthor = (e: React.SyntheticEvent) => {
+	const createNewAuthor = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
+		const newAuthor = {
+			id: '',
+			name: watchedAuthorName,
+		};
+		const newCreatedAuthor = await dispatch(createAuthor(newAuthor));
+
 		if (watchedAuthorName) {
-			setAuthors([
-				...authors,
-				{
-					id: uuidv4(),
-					name: watchedAuthorName,
-				},
-			]);
+			setAuthors([...authors, newCreatedAuthor]);
 		}
 		setValue('AuthorName', '');
 	};
+
 	const removeAuthor = (id: string) => {
 		setAuthors(authors.filter((author) => author.id !== id));
+		dispatch(deleteAuthorAction(id));
 	};
 
 	const addAuthor = (id: string) => {
 		const author = authors.find((author) => author.id === id);
 		if (author) {
 			setCourseAuthors([...courseAuthors, author]);
-			console.log('courseAuthors', courseAuthors);
 			removeAuthor(id);
 		}
 	};
@@ -152,7 +199,7 @@ export const CreateCourse = () => {
 								<div className={styles.createAuthorButton}>
 									<Button
 										buttonText={ButtonsName.CreateAuthor}
-										onClick={createAuthor}
+										onClick={createNewAuthor}
 									/>
 								</div>
 							</div>
@@ -165,6 +212,7 @@ export const CreateCourse = () => {
 								authors.map((author) => {
 									return (
 										<AuthorItem
+											key={`author-${author.id}`}
 											author={author}
 											onAddAuthor={addAuthor}
 											onRemoveAuthor={removeAuthor}
@@ -191,7 +239,11 @@ export const CreateCourse = () => {
 						<Button buttonText={ButtonsName.Cancel} onClick={handleCancel} />
 					</div>
 					<div style={{ width: '200px' }}>
-						<Button buttonText={ButtonsName.CreateCourse} />
+						<Button
+							buttonText={
+								editMode ? ButtonsName.UpdateCourse : ButtonsName.CreateCourse
+							}
+						/>
 					</div>
 				</div>
 			</form>

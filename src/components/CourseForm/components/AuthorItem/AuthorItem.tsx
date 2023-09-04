@@ -1,9 +1,9 @@
 import { TEXT_BUNDLE } from '../../../../assets/text/textbundle';
-import { Author } from '../../../../interfaces/author.interface';
+import { AuthorType } from '../../../../store/authors/authors.type';
 import styles from './AuthorItem.module.scss';
 
 export const AuthorItem: React.FC<{
-	author: Author;
+	author: AuthorType;
 	onAddAuthor: (id: string) => void;
 	onRemoveAuthor: (id: string) => void;
 }> = ({ author, onAddAuthor, onRemoveAuthor }) => {
