@@ -31,7 +31,6 @@ export const getUser = () => {
 export const setAuthToken = (token: string) => {
 	return (dispatch: Dispatch) => {
 		try {
-			console.log('=========TOKEN:', token);
 			dispatch(setToken(token));
 		} catch (error) {
 			console.log('error', error);
