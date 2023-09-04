@@ -16,3 +16,7 @@ export const getErrors = (state: UserState) => {
 export const getIsAuth = (state: UserState) => {
 	return state.user.isAuth;
 };
+
+export const getAdminRole = (state: UserState) => {
+	return state.user.role === 'admin';
+};

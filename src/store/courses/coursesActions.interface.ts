@@ -24,8 +24,8 @@ interface DeleteCourse {
 	payload: string;
 }
 
-interface EditCourse {
-	type: CoursesActionTypes.EDIT_COURSE;
+interface UpdateCourse {
+	type: CoursesActionTypes.UPDATE_COURSE_SUCCESS;
 	payload: CourseType;
 }
 
@@ -34,5 +34,5 @@ export type CoursesAction =
 	| FetchCourses
 	| FetchCoursesSuccess
 	| FetchCoursesFailure
-	| EditCourse
+	| UpdateCourse
 	| DeleteCourse;

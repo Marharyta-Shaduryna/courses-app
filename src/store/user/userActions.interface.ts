@@ -10,11 +10,6 @@ interface GetUserError {
 	payload: string[];
 }
 
-interface RemoveUser {
-	type: UserActionTypes.REMOVE_USER;
-	payload: string;
-}
-
 interface CreateUser {
 	type: UserActionTypes.CREATE_USER;
 }
@@ -28,10 +23,31 @@ interface ClearErrors {
 	type: UserActionTypes.CLEAR_ERRORS;
 }
 
+interface SetUser {
+	type: UserActionTypes.SET_USER;
+	payload: { email: string; name: string; role: string };
+}
+
+interface Logout {
+	type: UserActionTypes.LOGOUT;
+}
+
+interface LogoutSuccess {
+	type: UserActionTypes.LOGOUT_SUCCESS;
+}
+
+interface SetToken {
+	type: UserActionTypes.SET_TOKEN;
+	payload: string;
+}
+
 export type UserAction =
 	| GetUserSuccess
 	| GetUserError
-	| RemoveUser
 	| CreateUser
 	| ClearErrors
+	| SetUser
+	| Logout
+	| LogoutSuccess
+	| SetToken
 	| CreateUserError;

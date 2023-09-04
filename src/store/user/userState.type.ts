@@ -3,6 +3,7 @@ export type UserType = {
 	name: string;
 	isAuth: boolean;
 	token: string;
+	role: string;
 	errors: string[];
 };
 

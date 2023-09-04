@@ -9,11 +9,11 @@ import { getAuthorsName } from '../../../helpers.ts/getAuthorsName';
 import { useNavigate } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteCourseAction } from '../../../store/courses/actions';
 import { AppDispatch } from '../../../store';
 import { CourseType } from '../../../store/courses/courses.type';
 import { AuthorType } from '../../../store/authors/authors.type';
 import { getAuthors } from '../../../store/authors/selectors';
+import { deleteCourse } from '../../../store/courses/thunk';
 
 const trash = (
 	<svg
@@ -54,20 +54,22 @@ const pencil = (
 
 interface CourseCardProps {
 	props: CourseType;
+	isAdmin: boolean;
 }
 
-export const CourseCard: React.FC<CourseCardProps> = ({ props }) => {
+export const CourseCard: React.FC<CourseCardProps> = ({ props, isAdmin }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
+
 	const authors: AuthorType[] = useSelector(getAuthors);
 
 	const editCourse = useCallback(() => {
-		navigate(`/courses/${props.id}/edit/`, { replace: true });
+		navigate(`/courses/update/${props.id}`, { replace: true });
 	}, [props]);
 
 	const removeCourse = useCallback(() => {
-		dispatch(deleteCourseAction(props.id));
-	}, []);
+		dispatch(deleteCourse(props.id));
+	}, [props]);
 
 	const getAuthorsList = useCallback(
 		(authorsList: string[]) => {
@@ -105,12 +107,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({ props }) => {
 								onClick={showCourse}
 							/>
 						</div>
-						<div className={styles.buttonsContainer_imgButton}>
-							<Button img={true} src={trash} onClick={removeCourse} />
-						</div>
-						<div className={styles.buttonsContainer_imgButton}>
-							<Button img={true} src={pencil} onClick={editCourse} />
-						</div>
+						{isAdmin && (
+							<>
+								<div className={styles.buttonsContainer_imgButton}>
+									<Button img={true} src={trash} onClick={removeCourse} />
+								</div>
+								<div className={styles.buttonsContainer_imgButton}>
+									<Button img={true} src={pencil} onClick={editCourse} />
+								</div>
+							</>
+						)}
 					</div>
 				</div>
 			</div>

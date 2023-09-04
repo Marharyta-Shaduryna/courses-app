@@ -11,7 +11,7 @@ export function coursesReducer(
 	switch (action.type) {
 		case CoursesActionTypes.CREATE_COURSE:
 			return [...state, action.payload];
-		case CoursesActionTypes.EDIT_COURSE:
+		case CoursesActionTypes.UPDATE_COURSE_SUCCESS:
 			return state.map((course) =>
 				course.id === action.payload.id ? action.payload : course
 			);

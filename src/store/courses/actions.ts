@@ -23,13 +23,13 @@ export const deleteCourseAction = (courseId: string): DeleteCourseAction => ({
 	payload: courseId,
 });
 
-type EditCourseAction = {
-	type: CoursesActionTypes.EDIT_COURSE;
+type UpdateCourseAction = {
+	type: CoursesActionTypes.UPDATE_COURSE_SUCCESS;
 	payload: CourseType;
 };
 
-export const editCourseAction = (course: CourseType): EditCourseAction => ({
-	type: CoursesActionTypes.EDIT_COURSE,
+export const updateCourseAction = (course: CourseType): UpdateCourseAction => ({
+	type: CoursesActionTypes.UPDATE_COURSE_SUCCESS,
 	payload: course,
 });
 

@@ -1,25 +1,37 @@
 import { ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { getIsAuth } from '../../store/user/selectors';
+import { useDispatch, useSelector } from 'react-redux';
 import { Header } from '../Header/Header';
+import { AppDispatch } from '../../store';
+import { getUser, setAuthToken } from '../../store/user/thunk';
+import { getToken } from '../../store/user/selectors';
+import { fetchCourses } from '../../store/courses/thunk';
 
-interface ChildrenRoutes {
+export interface ChildrenRoutes {
 	children: ReactNode;
 }
 const Layout: React.FC<ChildrenRoutes> = ({ children }) => {
 	const navigate = useNavigate();
-	const isAuth = useSelector(getIsAuth);
+
+	const dispatch = useDispatch<AppDispatch>();
+	const authToken = useSelector(getToken);
+	const token = localStorage.getItem('AUTH_TOKEN_REACT_COURSE');
 
 	useEffect(() => {
-		const isToken = localStorage.getItem('AUTH_TOKEN_REACT_COURSE');
-		if (isAuth && isToken && isToken.includes('Bearer')) {
-			navigate('/courses', { replace: true });
+		if (token && token.includes('Bearer')) {
+			dispatch(setAuthToken(token));
+			dispatch(getUser());
 		}
-		if (!isAuth) {
+	}, []);
+
+	useEffect(() => {
+		if (authToken) {
+			dispatch(fetchCourses());
+			navigate('/courses', { replace: true });
+		} else {
 			navigate('/login', { replace: true });
 		}
-	}, [isAuth]);
+	}, [authToken]);
 
 	return (
 		<div>

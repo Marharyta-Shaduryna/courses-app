@@ -24,14 +24,6 @@ export const getUserActionError = (error: string[]): GetUserError => ({
 	payload: error,
 });
 
-export type RemoveUserAction = {
-	type: UserActionTypes.REMOVE_USER;
-};
-
-export const removeUserAction = (): RemoveUserAction => ({
-	type: UserActionTypes.REMOVE_USER,
-});
-
 type CreateUserAction = {
 	type: UserActionTypes.CREATE_USER;
 };
@@ -56,4 +48,44 @@ type ClearErrors = {
 
 export const clearErrors = (): ClearErrors => ({
 	type: UserActionTypes.CLEAR_ERRORS,
+});
+
+type SetUser = {
+	type: UserActionTypes.SET_USER;
+	payload: { email: string; name: string; role: string };
+};
+
+export const setUser = (user: {
+	email: string;
+	name: string;
+	role: string;
+}): SetUser => ({
+	type: UserActionTypes.SET_USER,
+	payload: user,
+});
+
+type Logout = {
+	type: UserActionTypes.LOGOUT;
+};
+
+export const logout = (): Logout => ({
+	type: UserActionTypes.LOGOUT,
+});
+
+type LogoutSuccess = {
+	type: UserActionTypes.LOGOUT_SUCCESS;
+};
+
+export const logoutSuccess = (): LogoutSuccess => ({
+	type: UserActionTypes.LOGOUT_SUCCESS,
+});
+
+type SetToken = {
+	type: UserActionTypes.SET_TOKEN;
+	payload: string;
+};
+
+export const setToken = (token: string): SetToken => ({
+	type: UserActionTypes.SET_TOKEN,
+	payload: token,
 });

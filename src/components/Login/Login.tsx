@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store';
-import { fetchUser } from '../../store/asyncActions';
+import { fetchUser } from '../../store/user/thunk';
 import { getErrors, getIsAuth } from '../../store/user/selectors';
 import { clearErrors } from '../../store/user/actions';
 

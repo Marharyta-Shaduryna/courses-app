@@ -7,7 +7,7 @@ import { ButtonsName } from '../../assets/text/buttonsName';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { createUser } from '../../store/asyncActions';
+import { createUser } from '../../store/user/thunk';
 import { AppDispatch } from '../../store';
 import { getErrors, getIsAuth } from '../../store/user/selectors';
 import { clearErrors } from '../../store/user/actions';

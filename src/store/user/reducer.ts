@@ -6,6 +6,7 @@ const initUserState = {
 	name: '',
 	isAuth: false,
 	token: '',
+	role: '',
 	errors: [],
 };
 
@@ -30,8 +31,27 @@ export function userReducer(state = initUserState, action: UserAction) {
 			};
 		case UserActionTypes.CREATE_USER_ERROR:
 			return { ...state, errors: action.payload, isAuth: false };
-		case UserActionTypes.REMOVE_USER:
-			return { ...state, isAuth: false, errors: [] };
+		case UserActionTypes.LOGOUT_SUCCESS:
+			return {
+				...state,
+				isAuth: false,
+				name: '',
+				email: '',
+				token: '',
+				errors: [],
+			};
+		case UserActionTypes.SET_USER:
+			return {
+				...state,
+				email: action.payload.email,
+				name: action.payload.name,
+				role: action.payload.role,
+			};
+		case UserActionTypes.SET_TOKEN:
+			return {
+				...state,
+				token: action.payload,
+			};
 		case UserActionTypes.CLEAR_ERRORS:
 			return { ...state, errors: [] };
 		default:

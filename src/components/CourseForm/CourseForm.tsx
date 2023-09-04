@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { TEXT_BUNDLE } from '../../assets/text/textbundle';
 import Input from '../../common/Input/Input';
-import styles from './CreateCourse.module.scss';
+import styles from './CourseForm.module.scss';
 import { getCourseDuration } from '../../helpers.ts/getCourseDuration';
 import { ButtonsName } from '../../assets/text/buttonsName';
 import Button from '../../common/Button/Button';
@@ -12,18 +12,17 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { formatDate } from '../../helpers.ts/formatDate';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store';
-import {
-	createNewCourseAction,
-	editCourseAction,
-} from '../../store/courses/actions';
 import { CourseType } from '../../store/courses/courses.type';
 import { getCourses } from '../../store/courses/selectors';
 import { getAuthors } from '../../store/authors/selectors';
 import { AuthorType } from '../../store/authors/authors.type';
+import { deleteAuthorAction } from '../../store/authors/actions';
 import {
-	createNewAuthorAction,
-	deleteAuthorAction,
-} from '../../store/authors/actions';
+	createNewCourse,
+	fetchCourses,
+	updateCourse,
+} from '../../store/courses/thunk';
+import { createAuthor } from '../../store/authors/thunk';
 
 type CourseData = {
 	Title: string;
@@ -32,7 +31,7 @@ type CourseData = {
 	AuthorName: string;
 };
 
-export const CreateCourse = () => {
+export const CourseForm = () => {
 	const {
 		register,
 		handleSubmit,
@@ -57,7 +56,7 @@ export const CreateCourse = () => {
 	const [editMode, setEditMode] = useState(false);
 
 	useEffect(() => {
-		if (location.pathname.includes('/edit')) {
+		if (location.pathname.includes('/update')) {
 			setEditMode(true);
 		}
 	});
@@ -80,13 +79,13 @@ export const CreateCourse = () => {
 		}
 	}, [editMode, location, setValue]);
 
-	const onSubmit: SubmitHandler<CourseData> = (data) => {
+	const onSubmit: SubmitHandler<CourseData> = async (data) => {
 		const courseData = {
 			id: editMode && courseId ? courseId : uuidv4(),
 			title: data.Title,
 			description: data.Description,
 			creationDate: formatDate(new Date()),
-			duration: data.Duration,
+			duration: Number(data.Duration),
 			authors: courseAuthors.map((author) => author.id),
 		};
 
@@ -95,28 +94,31 @@ export const CreateCourse = () => {
 			return;
 		}
 
-		if (editMode) {
-			dispatch(editCourseAction(courseData));
+		if (editMode && courseId) {
+			await dispatch(updateCourse(courseId, courseData));
 		} else {
-			dispatch(createNewCourseAction(courseData));
+			await dispatch(createNewCourse(courseData));
 		}
+
+		dispatch(fetchCourses());
 
 		navigate('/courses', { replace: true });
 	};
 
-	const createAuthor = (e: React.SyntheticEvent) => {
+	const createNewAuthor = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		const newAuthor = {
-			id: uuidv4(),
+			id: '',
 			name: watchedAuthorName,
 		};
-		dispatch(createNewAuthorAction(newAuthor));
+		const newCreatedAuthor = await dispatch(createAuthor(newAuthor));
 
 		if (watchedAuthorName) {
-			setAuthors([...authors, newAuthor]);
+			setAuthors([...authors, newCreatedAuthor]);
 		}
 		setValue('AuthorName', '');
 	};
+
 	const removeAuthor = (id: string) => {
 		setAuthors(authors.filter((author) => author.id !== id));
 		dispatch(deleteAuthorAction(id));
@@ -197,7 +199,7 @@ export const CreateCourse = () => {
 								<div className={styles.createAuthorButton}>
 									<Button
 										buttonText={ButtonsName.CreateAuthor}
-										onClick={createAuthor}
+										onClick={createNewAuthor}
 									/>
 								</div>
 							</div>

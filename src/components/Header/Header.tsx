@@ -6,9 +6,9 @@ import { ButtonsName } from '../../assets/text/buttonsName';
 import Logo from './components/Logo/Logo';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getEmail, getName } from '../../store/user/selectors';
+import { getAdminRole, getName } from '../../store/user/selectors';
 import { AppDispatch } from '../../store';
-import { removeUserAction } from '../../store/user/actions';
+import { logoutUser } from '../../store/user/thunk';
 
 export const Header = () => {
 	const [isLogin, setIsLogin] = useState(false);
@@ -16,14 +16,13 @@ export const Header = () => {
 
 	const navigate = useNavigate();
 
-	const userEmail = useSelector(getEmail);
+	const isAdmin = useSelector(getAdminRole);
 	const userName = useSelector(getName);
 
 	const dispatch = useDispatch<AppDispatch>();
 
 	function logout() {
-		dispatch(removeUserAction());
-		localStorage.removeItem('AUTH_TOKEN_REACT_COURSE');
+		dispatch(logoutUser());
 		setIsLogin(false);
 	}
 
@@ -31,8 +30,8 @@ export const Header = () => {
 		if (localStorage.getItem('AUTH_TOKEN_REACT_COURSE')?.includes('Bearer')) {
 			setIsLogin(true);
 		}
-		userEmail && !userEmail.includes('admin') ? setName(userName) : setName('');
-	}, [navigate]);
+		isAdmin ? setName(userName) : setName('');
+	}, [navigate, isAdmin, userName]);
 
 	return (
 		<div className={styles.container}>
