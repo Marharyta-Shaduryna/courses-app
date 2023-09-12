@@ -5,19 +5,27 @@ import Button from '../../common/Button/Button';
 import { getAuthorsName } from '../../helpers.ts/getAuthorsName';
 import { getCourseDuration } from '../../helpers.ts/getCourseDuration';
 import { useNavigate, useParams } from 'react-router-dom';
-import { mockedCoursesList } from '../../assets/mock/mockCourseData';
+import { CourseType } from '../../store/courses/courses.type';
+import { useSelector } from 'react-redux';
+import { getCourses } from '../../store/courses/selectors';
+import { AuthorType } from '../../store/authors/authors.type';
+import { getAuthors } from '../../store/authors/selectors';
 
 export const CourseInfo = () => {
 	const { courseId } = useParams();
+	const courses: CourseType[] = useSelector(getCourses);
+	const authors: AuthorType[] = useSelector(getAuthors);
+
 	const navigate = useNavigate();
 
 	const course = () => {
-		return mockedCoursesList.find((course) => course.id === courseId);
+		return courses.find((course) => course.id === courseId);
 	};
 
-	const getAuthors = (authorsList: string[] | undefined) => {
+	const getAuthorsList = (authorsList: string[] | undefined) => {
 		if (!authorsList) return;
-		return getAuthorsName(authorsList);
+
+		return getAuthorsName(authorsList, authors);
 	};
 
 	const onBack = () => {
@@ -47,7 +55,7 @@ export const CourseInfo = () => {
 						</div>
 						<div>
 							<span className={styles.infoTitle}>{TEXT_BUNDLE.authors}:</span>{' '}
-							{getAuthors(course()?.authors)}
+							{getAuthorsList(course()?.authors)}
 						</div>
 					</div>
 				</div>

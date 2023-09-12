@@ -1,37 +1,38 @@
-import { useEffect, useState } from 'react';
-import { Header } from './components/Header/Header';
-import styles from './App.module.scss';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { Login } from './components/Login/Login';
+import { Courses } from './components/Courses/Courses';
+import { CourseForm } from './components/CourseForm/CourseForm';
+import { CourseInfo } from './components/CourseInfo/CourseInfo';
+import { Registration } from './components/Registration/Registration';
+import Layout from './components/Layout/Layout';
+import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
 
 const App = () => {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const [hasNavigated, setHasNavigated] = useState(false);
-
-	useEffect(() => {
-		if (hasNavigated) return;
-
-		const isToken = localStorage.getItem('AUTH_TOKEN_REACT_COURSE');
-		const isAuthPages =
-			location.pathname === '/registration' || location.pathname === '/login';
-		if (isToken && isToken.includes('Bearer')) {
-			navigate('/courses', { replace: true });
-			setHasNavigated(true);
-		} else if (!isAuthPages) {
-			navigate('/login', { replace: true });
-			setHasNavigated(true);
-		}
-	}, [navigate, location, hasNavigated]);
-
 	return (
-		<div>
-			<Header />
-			<div className={styles.container}>
-				<div>
-					<Outlet />
-				</div>
-			</div>
-		</div>
+		<Layout>
+			<Routes>
+				<Route path='login' element={<Login />} />
+				<Route path='courses' element={<Courses />} />
+				<Route
+					path='courses/add'
+					element={
+						<PrivateRoute>
+							<CourseForm />
+						</PrivateRoute>
+					}
+				/>
+				<Route
+					path='/courses/update/:courseId'
+					element={
+						<PrivateRoute>
+							<CourseForm />
+						</PrivateRoute>
+					}
+				/>
+				<Route path='courses/:courseId' element={<CourseInfo />} />
+				<Route path='registration' element={<Registration />} />
+			</Routes>
+		</Layout>
 	);
 };
 
