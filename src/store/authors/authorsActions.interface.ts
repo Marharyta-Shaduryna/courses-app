@@ -1,7 +1,7 @@
 import { AuthorType } from './authors.type';
 import { AuthorsActionTypes } from './types';
 
-interface FetchCoursesSuccess {
+interface FetchAuthorsSuccess {
 	type: AuthorsActionTypes.FETCH_AUTHORS;
 	payload: AuthorType[];
 }
@@ -16,6 +16,6 @@ interface DeleteAuthorAction {
 }
 
 export type AuthorsAction =
-	| FetchCoursesSuccess
+	| FetchAuthorsSuccess
 	| CreateNewAuthorAction
 	| DeleteAuthorAction;

@@ -10,12 +10,3 @@ export const API_CONSTANTS = {
 	createAuthor: 'http://localhost:4000/authors/add',
 	updateCourse: 'http://localhost:4000/courses',
 };
-/* /courses/add [POST] (use ADMIN credentials)
-/courses/{id} [PUT] (use ADMIN credentials)
-/authors/add [POST] (use ADMIN credentials)
-/courses/{id} [DELETE] (use ADMIN credentials)
-/logout [DELETE]
-/users/me [GET] */
-
-/* For fetching requests you should add Authorization header with user's token
-Authorization: token */

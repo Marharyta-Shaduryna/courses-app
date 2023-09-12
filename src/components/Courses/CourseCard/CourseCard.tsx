@@ -83,7 +83,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ props, isAdmin }) => {
 	}, [props]);
 
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} role='article'>
 			<h1 className={styles.title}>{props.title}</h1>
 			<div className={styles.content}>
 				<div className={styles.content__artical}>{props.description}</div>

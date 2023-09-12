@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Header } from '../Header/Header';
 import { AppDispatch } from '../../store';
-import { getUser, setAuthToken } from '../../store/user/thunk';
+import { getUser } from '../../store/user/thunk';
 import { getToken } from '../../store/user/selectors';
 import { fetchCourses } from '../../store/courses/thunk';
+import { UserActionTypes } from '../../store/user/types';
 
 export interface ChildrenRoutes {
 	children: ReactNode;
@@ -19,13 +20,13 @@ const Layout: React.FC<ChildrenRoutes> = ({ children }) => {
 
 	useEffect(() => {
 		if (token && token.includes('Bearer')) {
-			dispatch(setAuthToken(token));
-			dispatch(getUser());
+			dispatch({ type: UserActionTypes.SET_TOKEN, payload: token });
 		}
 	}, []);
 
 	useEffect(() => {
 		if (authToken) {
+			dispatch(getUser());
 			dispatch(fetchCourses());
 			navigate('/courses', { replace: true });
 		} else {

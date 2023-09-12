@@ -30,7 +30,7 @@ export const Header = () => {
 		if (localStorage.getItem('AUTH_TOKEN_REACT_COURSE')?.includes('Bearer')) {
 			setIsLogin(true);
 		}
-		isAdmin ? setName(userName) : setName('');
+		isAdmin ? setName('') : setName(userName);
 	}, [navigate, isAdmin, userName]);
 
 	return (

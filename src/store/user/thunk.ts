@@ -8,7 +8,6 @@ import {
 	getUserActionError,
 	getUserActionSuccess,
 	logoutSuccess,
-	setToken,
 	setUser,
 } from './actions';
 import { ArrayError } from '../customErrors/customError';
@@ -22,16 +21,6 @@ export const getUser = () => {
 		try {
 			const user = await server.getRole();
 			dispatch(setUser(user));
-		} catch (error) {
-			console.log('error', error);
-		}
-	};
-};
-
-export const setAuthToken = (token: string) => {
-	return (dispatch: Dispatch) => {
-		try {
-			dispatch(setToken(token));
 		} catch (error) {
 			console.log('error', error);
 		}

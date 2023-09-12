@@ -143,7 +143,7 @@ export const CourseForm = () => {
 	}, [courseAuthors]);
 
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} data-testid='course-form'>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<h2 className={styles.courseEditTitle}>{TEXT_BUNDLE.courseEdit}</h2>
 				<div className={styles.courseContainer}>

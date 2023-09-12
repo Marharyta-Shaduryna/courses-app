@@ -23,7 +23,6 @@ export class Server {
 
 			const courses = coursesResponse.data.result;
 			const authors = authorsResponse.data.result;
-
 			return {
 				courses,
 				authors,
@@ -52,8 +51,9 @@ export class Server {
 	}) => {
 		try {
 			const response = await axios.post(API_CONSTANTS.registration, body);
-			if (response.data.successful) {
-				return response.data;
+			const responseResult = response.data;
+			if (responseResult.successful) {
+				return responseResult;
 			}
 		} catch (error) {
 			const errorsArray = (error as ErrorResponse).response.data.errors;
